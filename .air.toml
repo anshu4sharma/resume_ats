@@ -1,0 +1,37 @@
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ./cmd/main.go"
+  delay = 1000
+  exclude_dir = ["assets", "vendor", "testdata"]
+  exclude_regex = ["_test.go"]
+  stop_on_error = true
+  exclude_unchanged = false
+  follow_symlink = false
+  include_ext = ["go", "tpl", "tmpl", "html"]
+  kill_delay = "0s"
+  log = "build-errors.log"
+  poll = false
+  rerun_delay = 500
+  send_interrupt = false
+
+[color]
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  main_only = false
+  silent = false
+  time = false
+
+[misc]
+  clean_on_exit = false
+
+[screen]
+  clear_on_rebuild = false
+  keep_scroll = true

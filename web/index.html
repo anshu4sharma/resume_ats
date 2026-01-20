@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Resume ATS Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              success: "#22c55e",
+              danger: "#ef4444",
+              accent: "#6366f1",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body
+    class="bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 min-h-screen flex items-center justify-center p-6"
+  >
+    <div
+      class="max-w-5xl w-full bg-slate-900/80 backdrop-blur rounded-xl shadow-2xl p-6 md:p-10"
+    >
+      <h1 class="text-3xl md:text-4xl font-bold text-center mb-6">
+        Resume ATS Analyzer
+      </h1>
+
+      <!-- Drop / Click Zone -->
+      <div
+        id="dropZone"
+        class="border-2 border-dashed border-slate-500 rounded-lg p-10 text-center cursor-pointer transition hover:border-accent hover:bg-slate-800"
+      >
+        <p class="text-lg">
+          Drag & drop your
+          <span class="text-accent font-semibold">PDF resume</span> here
+        </p>
+        <p class="text-sm text-slate-400 mt-2">
+          Or click to upload. No storage. Instant analysis.
+        </p>
+
+        <input
+          type="file"
+          id="fileInput"
+          accept="application/pdf"
+          class="hidden"
+        />
+      </div>
+
+      <!-- Result -->
+      <div id="result" class="mt-8"></div>
+    </div>
+
+    <script>
+      const dropZone = document.getElementById("dropZone");
+      const resultDiv = document.getElementById("result");
+      const fileInput = document.getElementById("fileInput");
+
+      /* ---------- UI interactions ---------- */
+
+      dropZone.addEventListener("click", () => fileInput.click());
+
+      ["dragover", "dragenter"].forEach((event) => {
+        dropZone.addEventListener(event, (e) => {
+          e.preventDefault();
+          dropZone.classList.add("border-accent");
+        });
+      });
+
+      ["dragleave", "drop"].forEach((event) => {
+        dropZone.addEventListener(event, (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("border-accent");
+        });
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        const file = e.dataTransfer.files[0];
+        uploadFile(file);
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        uploadFile(file);
+        fileInput.value = "";
+      });
+
+      /* ---------- Core upload logic ---------- */
+
+      async function uploadFile(file) {
+        if (!file || file.type !== "application/pdf") {
+          alert("Only PDF files are supported");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        resultDiv.innerHTML = `
+          <div class="text-center mt-6 text-accent animate-pulse">
+            Analyzing resume…
+          </div>
+        `;
+
+        try {
+          const res = await fetch("/api/v1/ats/resume_upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            const text = await res.text();
+            throw new Error(text);
+          }
+
+          const json = await res.json();
+          renderResult(json);
+        } catch (err) {
+          resultDiv.innerHTML = `
+            <p class="text-danger text-center mt-4">
+              ${err.message || "Upload failed"}
+            </p>
+          `;
+        }
+      }
+
+      /* ---------- Rendering ---------- */
+      const UI_GROUPS = [
+        {
+          title: "Profile & Basics",
+          fields: [
+            "has_profile_summary",
+            "has_experience",
+            "has_skills",
+            "has_education",
+          ],
+        },
+        {
+          title: "Contact & Presence",
+          fields: [
+            "has_email",
+            "has_phone",
+            "has_linkedin",
+            "has_github_or_portfolio",
+          ],
+        },
+        {
+          title: "Work & Proof",
+          fields: [
+            "has_projects_or_certs",
+            "has_achievements",
+            "has_proof_of_work",
+          ],
+        },
+        {
+          title: "Competitive Signals",
+          fields: ["has_coding_platforms", "has_coding_contests"],
+        },
+        {
+          title: "Language & Writing",
+          fields: [
+            "complex_sentences",
+            "repeated_action_verbs",
+            "passive_language",
+            "grammar_issues",
+            "ai_language_detected",
+          ],
+        },
+        {
+          title: "Formatting & Structure",
+          fields: [
+            "good_formatting",
+            "multiple_fonts",
+            "multi_column_layout",
+            "more_than_two_pages",
+            "large_file_size",
+          ],
+        },
+        {
+          title: "Risk Flags",
+          fields: [
+            "experience_gap",
+            "missing_keywords",
+            "missing_social_presence",
+            "open_university",
+            "personal_details_present",
+          ],
+        },
+      ];
+
+      function renderResult(res) {
+        const { score, data } = res;
+
+        let html = `
+  <div class="text-center mb-8">
+    <div class="text-5xl font-bold text-accent">${score}</div>
+    <div class="text-slate-400">ATS Score</div>
+  </div>
+`;
+
+        for (const group of UI_GROUPS) {
+          const visibleFields = group.fields.filter((f) => f in data);
+
+          if (visibleFields.length === 0) continue;
+
+          html += `
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-slate-300 mb-3">
+        ${group.title}
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+  `;
+
+          for (const field of visibleFields) {
+            const value = data[field];
+
+            html += `
+      <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-800">
+        ${value ? successIcon() : errorIcon()}
+        <span class="text-sm capitalize">
+          ${field.replaceAll("_", " ")}
+        </span>
+      </div>
+    `;
+          }
+
+          html += `
+      </div>
+    </div>
+  `;
+        }
+
+        resultDiv.innerHTML = html;
+      }
+
+      function successIcon() {
+        return `
+          <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+          </svg>
+        `;
+      }
+
+      function errorIcon() {
+        return `
+          <svg class="w-5 h-5 text-danger" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        `;
+      }
+    </script>
+  </body>
+</html>

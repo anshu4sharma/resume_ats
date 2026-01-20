@@ -1,0 +1,79 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of build and test tools
+bin/
+build/
+dist/
+out/
+uploads/
+coverage/
+*.coverprofile
+*.out
+
+# Go workspace and cache
+go.work
+go.work.sum
+*.log
+*.tmp
+*.pid
+*.swp
+*.swo
+
+# Dependency directories (if you ever use vendoring)
+vendor/
+
+# IDE / editor specific
+.vscode/
+.idea/
+*.iml
+
+# Environment / local configuration
+.env
+#.env.*
+*.local
+config.yaml
+config.local.yaml
+secrets.json
+
+# Docker and container artifacts
+docker-compose.override.yml
+*.tar
+*.img
+*.container
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Temporary or generated files
+tmp/
+*.bak
+*.old
+
+# Test and benchmarking artifacts
+wrk_results/
+benchmarks/
+reports/
+
+# Terraform / deployment state
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Logs and runtime data
+logs/
+*.log.*
+
+# Coverage / profiling data
+*.prof
+cpu.prof
+mem.prof
+block.prof
+trace.out
