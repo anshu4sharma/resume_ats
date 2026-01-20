@@ -7,6 +7,31 @@
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes spin-slow {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse-fade {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .loader-ring {
+        animation: spin-slow 1.2s linear infinite;
+      }
+
+      .loader-text {
+        animation: pulse-fade 1.5s ease-in-out infinite;
+      }
+    </style>
 
     <script>
       tailwind.config = {
@@ -59,6 +84,30 @@
     </div>
 
     <script>
+      function showLoader() {
+        resultDiv.innerHTML = `
+    <div class="flex flex-col items-center justify-center gap-6 mt-10">
+      <div class="relative w-16 h-16">
+        <div
+          class="absolute inset-0 rounded-full border-4 border-slate-700"
+        ></div>
+        <div
+          class="absolute inset-0 rounded-full border-4 border-accent border-t-transparent loader-ring"
+        ></div>
+      </div>
+
+      <div class="text-center">
+        <p class="text-accent font-semibold loader-text">
+          Parsing resume against ATS heuristics
+        </p>
+        <p class="text-sm text-slate-400 mt-1">
+          Extracting signals. Evaluating risk. Scoring employability.
+        </p>
+      </div>
+    </div>
+  `;
+      }
+
       const dropZone = document.getElementById("dropZone");
       const resultDiv = document.getElementById("result");
       const fileInput = document.getElementById("fileInput");
@@ -103,11 +152,7 @@
         const formData = new FormData();
         formData.append("file", file);
 
-        resultDiv.innerHTML = `
-          <div class="text-center mt-6 text-accent animate-pulse">
-            Analyzing resume…
-          </div>
-        `;
+        showLoader();
 
         try {
           const res = await fetch("/api/v1/ats/resume_upload", {
