@@ -1,8 +1,10 @@
-# Resume ATS Analyzer
+# Resume ATS Analyzer (`resume_ats`)
 
-A lightweight, real-time **Applicant Tracking System (ATS) Resume Analyzer** built with Go and Fiber. The service ingests PDF resumes, performs text extraction with OCR fallback, evaluates multiple ATS-relevant signals, and returns a structured score and diagnostics. Designed for speed, modularity, and clean service boundaries.
+A lightweight, real-time **Applicant Tracking System (ATS) Resume Analyzer** built with **Go** and **Fiber**. The service ingests PDF resumes, performs text extraction with automatic OCR fallback, evaluates multiple ATS-relevant signals, and returns a structured score with diagnostics.
 
-This system does not store resumes permanently. Files exist only for the duration of processing and are deleted immediately after analysis.
+Designed with a performance-first mindset, clean service boundaries, and zero data retention.
+
+Resumes are **never stored permanently**. Files exist only for the duration of processing and are deterministically deleted immediately after analysis.
 
 ---
 
@@ -11,8 +13,8 @@ This system does not store resumes permanently. Files exist only for the duratio
 ### Resume Ingestion
 
 * Accepts PDF resumes via multipart upload
-* Enforces file type and size constraints
-* Uses temporary storage with deterministic cleanup
+* Enforces strict file type and size constraints
+* Uses temporary storage with guaranteed cleanup
 
 ### Text Extraction
 
@@ -22,47 +24,94 @@ This system does not store resumes permanently. Files exist only for the duratio
 
 ### ATS Signal Detection
 
-Evaluates resumes across multiple dimensions, including:
+Evaluates resumes across multiple ATS-relevant dimensions.
 
-**Positive Indicators**
+#### Positive Indicators
 
 * Profile summary
 * Skills, education, and experience
 * Projects, certifications, and achievements
 * Coding platforms, contests, and programming languages
-* Contact details and professional links (email, phone, LinkedIn, GitHub/portfolio)
-* Formatting quality
+* Contact details and professional links (email, phone, LinkedIn, GitHub, portfolio)
+* Formatting quality and structural clarity
 
-**Negative Indicators**
+#### Negative Indicators
 
-* Missing sections (summary, education, proof of work)
+* Missing critical sections (summary, education, proof of work)
 * Experience gaps
-* Passive or complex language
+* Passive or overly complex language
 * Repeated action verbs
-* Multi-column layouts and multiple fonts
+* Multi-column layouts and excessive font usage
 * Oversized resumes (page count or file size)
 * Personal detail leakage
-* Open university flags
+* Open-university flags
 
 ### Scoring
 
 * Aggregates all detected signals into a normalized ATS score
-* Designed to be extensible with additional rules or weighting strategies
+* Rule-based and weight-driven
+* Designed for easy extensibility with additional heuristics or ML-backed strategies
 
 ---
 
 ## Architecture Overview
 
-* **Handlers**
-  Own HTTP concerns: request parsing, validation, temporary file handling, and responses.
+The project is intentionally structured around strict separation of concerns.
 
-* **Services**
-  Contain pure business logic: resume analysis, OCR fallback, signal detection, and scoring. No HTTP or framework coupling.
+### Handlers
 
-* **Utils**
-  Shared detection, extraction, and scoring utilities.
+* Own HTTP concerns only
+* Request parsing, validation, temporary file handling
+* Response formatting
 
-This separation ensures testability, maintainability, and future extensibility (CLI, async jobs, or gRPC).
+### Services
+
+* Pure business logic
+* Resume analysis, OCR fallback, signal detection, scoring
+* No HTTP or framework coupling
+
+### Utils
+
+* Shared extraction, detection, and scoring utilities
+
+This structure ensures:
+
+* High testability
+* Predictable behavior under load
+* Easy future expansion (CLI, async workers, gRPC)
+
+---
+
+## System Requirements
+
+This project relies on both Go modules **and system-level binaries** for PDF processing and OCR.
+
+### Required System Packages (Ubuntu)
+
+```bash
+sudo apt update
+sudo apt install -y \
+  poppler-utils \
+  tesseract-ocr \
+  tesseract-ocr-eng \
+  ghostscript \
+  imagemagick
+```
+
+**Why these are required:**
+
+* `poppler-utils` → provides `pdftoppm` for PDF-to-image conversion
+* `tesseract-ocr` → OCR engine
+* `tesseract-ocr-eng` → English language data (mandatory)
+* `ghostscript` → PDF rendering support
+* `imagemagick` → image processing fallback
+
+Verify installation:
+
+```bash
+pdftoppm -h
+tesseract --version
+```
 
 ---
 
@@ -75,7 +124,7 @@ git clone git@github.com:anshu4sharma/resume_ats.git
 cd resume_ats
 ```
 
-Install dependencies:
+Install Go dependencies:
 
 ```bash
 go mod tidy
@@ -87,23 +136,25 @@ Run the application:
 go run cmd/main.go
 ```
 
-The server will start with Fiber and expose resume upload endpoints as defined in the router.
+The Fiber server will start and expose resume upload endpoints as defined in the router.
 
 ---
 
 ## Configuration Notes
 
-* **Max request body size** is configurable via Fiber (`BodyLimit`)
+* **Max request body size** configurable via Fiber (`BodyLimit`)
 * Temporary files are stored locally and deleted after request completion
 * OCR and text extraction behavior is configurable via utility functions
+* Designed for synchronous, real-time analysis
 
 ---
 
-## Data Privacy
+## Data Privacy & Security
 
 * Resumes are processed in-memory and via temporary files only
 * No permanent storage
 * No background retention or archival
+* No third-party uploads
 * Designed to minimize compliance and data-leak risk
 
 ---
@@ -113,8 +164,8 @@ The server will start with Fiber and expose resume upload endpoints as defined i
 * Async processing via queue
 * Configurable scoring weights
 * Grammar and AI-language detection enhancements
-* Structured feedback explanations per score
-* Optional persistence layer for analytics (opt-in)
+* Structured, explainable scoring feedback
+* Optional persistence layer for analytics (explicit opt-in only)
 
 ---
 
@@ -124,5 +175,5 @@ MIT
 
 ---
 
-This project is optimized for clarity, separation of concerns, and predictable behavior under load. It does one job, does it quickly, and leaves no data behind.
-# resume_ats
+This project is optimized for clarity, separation of concerns, and operational predictability.
+It does one job, does it quickly, and leaves no data behind.

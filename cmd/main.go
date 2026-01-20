@@ -24,13 +24,27 @@ func main() {
 		AppName:   "Resume ATS v1.0",
 		BodyLimit: utils.MaxResumeSizeBytes,
 	})
+	
+	app.Use(func(c *fiber.Ctx) error {
+		err := c.Next()
+		if err != nil {
+			if e, ok := err.(*fiber.Error); ok && e.Code == fiber.StatusRequestEntityTooLarge {
+				return c.Status(fiber.StatusRequestEntityTooLarge).JSON(fiber.Map{
+					"error":  "Resume file too large",
+					"max_mb": utils.MaxResumeSizeBytes / (1024 * 1024),
+				})
+			}
+			return err
+		}
+		return nil
+	})
 
 	app.Use(recover.New())
 	app.Use(flogger.New())
 	app.Static("/", "./web")
-	
+
 	handlers, err := bootstrap.InitializeApp(logger)
-	
+
 	if err != nil {
 		logger.Errorf("Failed to initialize app: %v", err)
 		os.Exit(1)
