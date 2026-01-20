@@ -40,11 +40,11 @@ func AnalyzeResumeWithAi(resumeText string) (*structs.ResumeStruct, error) {
 	content := chatCompletion.Choices[0].Message.Content
 	fmt.Println(content, "AI Result")
 
-	result, err := parseGeminiJSON(content)
+	result, err := parseAiRestoJSON(content)
 	return &result, err
 }
 
-func parseGeminiJSON(raw string) (structs.ResumeStruct, error) {
+func parseAiRestoJSON(raw string) (structs.ResumeStruct, error) {
 	clean := sanitizeJSON(raw)
 
 	var result structs.ResumeStruct
