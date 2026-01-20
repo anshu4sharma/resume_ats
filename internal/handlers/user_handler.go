@@ -36,6 +36,11 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 	if err := c.SaveFile(file, path); err != nil {
 		return c.Status(500).SendString("failed to save file")
 	}
+	
+	if file.Size > utils.MaxResumeSizeBytes {
+		return fiber.ErrRequestEntityTooLarge
+	}
+
 	defer func() {
 		h.logger.Debugf("Cleaning up resume pdf.")
 		if err := os.Remove(path); err != nil {
