@@ -23,6 +23,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		AppName:   "Resume ATS v1.0",
 		BodyLimit: utils.MaxResumeSizeBytes,
+		Prefork: true,
 	})
 	
 	app.Use(func(c *fiber.Ctx) error {

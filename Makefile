@@ -27,3 +27,10 @@ fmt:
 tidy:
 	@echo "📦 Tidying modules..."
 	$(GO) mod tidy
+
+# 	Build
+.PHONY: build
+build:
+	@echo "📦 Making production build...."
+	$(GO) build -tags netgo -ldflags "-s -w" -o myappbin ./cmd/...
+
