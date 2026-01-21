@@ -7,29 +7,79 @@
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lottie Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    
     <style>
-      @keyframes spin-slow {
+      @keyframes gradient-shift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+
+      @keyframes scale-in {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
         to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes pulse-fade {
-        0%,
-        100% {
-          opacity: 0.4;
-        }
-        50% {
           opacity: 1;
+          transform: scale(1);
         }
       }
 
-      .loader-ring {
-        animation: spin-slow 1.2s linear infinite;
+      @keyframes slide-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
-      .loader-text {
-        animation: pulse-fade 1.5s ease-in-out infinite;
+      .animate-gradient {
+        background-size: 200% 200%;
+        animation: gradient-shift 8s ease infinite;
+      }
+
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .animate-scale-in {
+        animation: scale-in 0.4s ease-out;
+      }
+
+      .animate-slide-up {
+        animation: slide-up 0.5s ease-out;
+      }
+
+      .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+      }
+
+      .upload-zone {
+        transition: all 0.3s ease;
+      }
+
+      .upload-zone:hover {
+        transform: scale(1.02);
+      }
+
+      .score-circle {
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       }
     </style>
 
@@ -40,7 +90,9 @@
             colors: {
               success: "#22c55e",
               danger: "#ef4444",
+              warning: "#f59e0b",
               accent: "#6366f1",
+              primary: "#8b5cf6",
             },
           },
         },
@@ -49,27 +101,65 @@
   </head>
 
   <body
-    class="bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 min-h-screen flex items-center justify-center p-6"
+    class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 min-h-screen flex items-center justify-center p-4 md:p-6 animate-gradient"
   >
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM2MzY2ZjEiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00ek0yMCA0OGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"></div>
+    
     <div
-      class="max-w-5xl w-full bg-slate-900/80 backdrop-blur rounded-xl shadow-2xl p-6 md:p-10"
+      class="relative max-w-6xl w-full bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700/50 p-6 md:p-12 animate-scale-in"
     >
-      <h1 class="text-3xl md:text-4xl font-bold text-center mb-6">
-        Resume ATS Analyzer
-      </h1>
+      <!-- Header -->
+      <div class="text-center mb-10">
+        <div class="inline-block mb-4 p-4 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-lg animate-float">
+          <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">
+          ATS Resume Analyzer
+        </h1>
+        <p class="text-slate-400 text-lg">Get instant feedback on your resume's ATS compatibility</p>
+      </div>
 
-      <!-- Drop / Click Zone -->
+      <!-- Upload Zone -->
       <div
         id="dropZone"
-        class="border-2 border-dashed border-slate-500 rounded-lg p-10 text-center cursor-pointer transition hover:border-accent hover:bg-slate-800"
+        class="upload-zone relative border-2 border-dashed border-slate-600 rounded-2xl p-12 md:p-16 text-center cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:bg-slate-800/50 group"
       >
-        <p class="text-lg">
-          Drag & drop your
-          <span class="text-accent font-semibold">PDF resume</span> here
-        </p>
-        <p class="text-sm text-slate-400 mt-2">
-          Or click to upload. No storage. Instant analysis.
-        </p>
+        <div class="flex flex-col items-center gap-6">
+          <div class="relative">
+            <div class="absolute inset-0 bg-indigo-600 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            <div class="relative p-6 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-full border border-indigo-500/30">
+              <svg class="w-16 h-16 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </div>
+          </div>
+          
+          <div>
+            <p class="text-xl font-semibold text-slate-200 mb-2">
+              Drop your PDF resume here
+            </p>
+            <p class="text-slate-400 text-sm">
+              or <span class="text-indigo-400 font-medium">click to browse</span>
+            </p>
+          </div>
+
+          <div class="flex items-center gap-6 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span>Secure & Private</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+              </svg>
+              <span>Instant Analysis</span>
+            </div>
+          </div>
+        </div>
 
         <input
           type="file"
@@ -80,32 +170,39 @@
       </div>
 
       <!-- Result -->
-      <div id="result" class="mt-8"></div>
+      <div id="result" class="mt-10"></div>
     </div>
 
     <script>
       function showLoader() {
         resultDiv.innerHTML = `
-    <div class="flex flex-col items-center justify-center gap-6 mt-10">
-      <div class="relative w-16 h-16">
-        <div
-          class="absolute inset-0 rounded-full border-4 border-slate-700"
-        ></div>
-        <div
-          class="absolute inset-0 rounded-full border-4 border-accent border-t-transparent loader-ring"
-        ></div>
-      </div>
-
-      <div class="text-center">
-        <p class="text-accent font-semibold loader-text">
-          Parsing resume against ATS heuristics
+    <div class="flex flex-col items-center justify-center gap-8 py-16 animate-scale-in">
+      <div id="lottie-container" class="w-64 h-64"></div>
+      
+      <div class="text-center space-y-3">
+        <div class="flex items-center justify-center gap-2">
+          <div class="w-4 h-4 bg-indigo-500 rounded-full animate-pulse"></div>
+          <div class="w-4 h-4 bg-purple-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+          <div class="w-4 h-4 bg-pink-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+        </div>
+        <p class="text-xl font-semibold text-slate-200">
+          Analyzing Your Resume
         </p>
-        <p class="text-sm text-slate-400 mt-1">
-          Extracting signals. Evaluating risk. Scoring employability.
+        <p class="text-sm text-slate-400 max-w-md">
+          Checking format, keywords, content structure, and ATS compatibility
         </p>
       </div>
     </div>
   `;
+
+        // Initialize Lottie animation
+        lottie.loadAnimation({
+          container: document.getElementById("lottie-container"),
+          renderer: "svg",
+          loop: true,
+          autoplay: true,
+          path: "https://assets2.lottiefiles.com/packages/lf20_rxzdypdk.json", // Document scanning animation
+        });
       }
 
       const dropZone = document.getElementById("dropZone");
@@ -119,14 +216,14 @@
       ["dragover", "dragenter"].forEach((event) => {
         dropZone.addEventListener(event, (e) => {
           e.preventDefault();
-          dropZone.classList.add("border-accent");
+          dropZone.classList.add("border-indigo-500", "bg-slate-800/50", "scale-105");
         });
       });
 
       ["dragleave", "drop"].forEach((event) => {
         dropZone.addEventListener(event, (e) => {
           e.preventDefault();
-          dropZone.classList.remove("border-accent");
+          dropZone.classList.remove("border-indigo-500", "bg-slate-800/50", "scale-105");
         });
       });
 
@@ -145,7 +242,7 @@
 
       async function uploadFile(file) {
         if (!file || file.type !== "application/pdf") {
-          alert("Only PDF files are supported");
+          showError("Please upload a valid PDF file");
           return;
         }
 
@@ -168,18 +265,28 @@
           const json = await res.json();
           renderResult(json);
         } catch (err) {
-          resultDiv.innerHTML = `
-            <p class="text-danger text-center mt-4">
-              ${err.message || "Upload failed"}
-            </p>
-          `;
+          showError(err.message || "Analysis failed. Please try again.");
         }
+      }
+
+      function showError(message) {
+        resultDiv.innerHTML = `
+          <div class="flex flex-col items-center justify-center gap-4 py-12 animate-scale-in">
+            <div class="p-4 bg-red-500/10 rounded-full">
+              <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <p class="text-red-400 text-center font-medium">${message}</p>
+          </div>
+        `;
       }
 
       /* ---------- Rendering ---------- */
       const UI_GROUPS = [
         {
-          title: "Profile & Basics",
+          title: "Essential Information",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>`,
           fields: [
             "has_profile_summary",
             "has_experience",
@@ -188,7 +295,8 @@
           ],
         },
         {
-          title: "Contact & Presence",
+          title: "Contact Details",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
           fields: [
             "has_email",
             "has_phone",
@@ -197,7 +305,8 @@
           ],
         },
         {
-          title: "Work & Proof",
+          title: "Professional Credibility",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>`,
           fields: [
             "has_projects_or_certs",
             "has_achievements",
@@ -205,11 +314,13 @@
           ],
         },
         {
-          title: "Competitive Signals",
+          title: "Technical Profile",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`,
           fields: ["has_coding_platforms", "has_coding_contests"],
         },
         {
-          title: "Language & Writing",
+          title: "Writing Quality",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>`,
           fields: [
             "complex_sentences",
             "repeated_action_verbs",
@@ -219,7 +330,8 @@
           ],
         },
         {
-          title: "Formatting & Structure",
+          title: "Format & Layout",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>`,
           fields: [
             "good_formatting",
             "multiple_fonts",
@@ -229,7 +341,8 @@
           ],
         },
         {
-          title: "Risk Flags",
+          title: "Risk Indicators",
+          icon: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`,
           fields: [
             "experience_gap",
             "missing_keywords",
@@ -242,35 +355,62 @@
 
       function renderResult(res) {
         const { score, data } = res;
+        const scoreColor = score >= 80 ? 'from-green-400 to-emerald-500' : score >= 60 ? 'from-yellow-400 to-orange-500' : 'from-red-400 to-rose-500';
 
         let html = `
-  <div class="text-center mb-8">
-    <div class="text-5xl font-bold text-accent">${score}</div>
-    <div class="text-slate-400">ATS Score</div>
+  <div class="text-center mb-12 animate-scale-in">
+    <div class="relative inline-block">
+      <svg class="w-48 h-48 transform -rotate-90">
+        <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="8" fill="none" class="text-slate-700" />
+        <circle cx="96" cy="96" r="88" stroke="url(#gradient)" stroke-width="8" fill="none" 
+          stroke-dasharray="${2 * Math.PI * 88}" 
+          stroke-dashoffset="${2 * Math.PI * 88 * (1 - score / 100)}"
+          class="score-circle transition-all duration-1000" 
+          stroke-linecap="round" />
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#6366f1" />
+            <stop offset="100%" style="stop-color:#a855f7" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <div class="text-6xl font-bold bg-gradient-to-r ${scoreColor} bg-clip-text text-transparent">${score}</div>
+        <div class="text-sm text-slate-400 font-medium mt-1">ATS Score</div>
+      </div>
+    </div>
+    <p class="mt-6 text-slate-300 text-lg">${getScoreMessage(score)}</p>
   </div>
+
+  <div class="space-y-6">
 `;
 
         for (const group of UI_GROUPS) {
           const visibleFields = group.fields.filter((f) => f in data);
-
           if (visibleFields.length === 0) continue;
 
           html += `
-    <div class="mb-6">
-      <h3 class="text-lg font-semibold text-slate-300 mb-3">
-        ${group.title}
-      </h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="card-hover bg-gradient-to-br from-slate-800/50 to-slate-800/30 backdrop-blur rounded-2xl p-6 border border-slate-700/50 animate-slide-up">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="p-2 bg-indigo-600/20 rounded-lg text-indigo-400">
+          ${group.icon}
+        </div>
+        <h3 class="text-lg font-semibold text-slate-200">
+          ${group.title}
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
   `;
 
           for (const field of visibleFields) {
             const value = data[field];
+            const isPositive = shouldBePositive(field) ? value : !value;
 
             html += `
-      <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-800">
-        ${value ? successIcon() : errorIcon()}
-        <span class="text-sm capitalize">
-          ${field.replaceAll("_", " ")}
+      <div class="flex items-center gap-3 p-4 rounded-xl ${isPositive ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'} transition-all hover:scale-105">
+        ${isPositive ? successIcon() : errorIcon()}
+        <span class="text-sm text-slate-200">
+          ${formatFieldName(field)}
         </span>
       </div>
     `;
@@ -282,25 +422,52 @@
   `;
         }
 
+        html += `</div>`;
         resultDiv.innerHTML = html;
+      }
+
+      function getScoreMessage(score) {
+        if (score >= 90) return "Excellent! Your resume is highly ATS-compatible";
+        if (score >= 75) return "Great! Minor improvements will make it perfect";
+        if (score >= 60) return "Good foundation, but needs optimization";
+        if (score >= 40) return "Significant improvements needed for ATS systems";
+        return "Major revisions required for ATS compatibility";
+      }
+
+      function shouldBePositive(field) {
+        const negativeFields = ['complex_sentences', 'repeated_action_verbs', 'passive_language', 
+          'grammar_issues', 'ai_language_detected', 'multiple_fonts', 'multi_column_layout',
+          'more_than_two_pages', 'large_file_size', 'experience_gap', 'missing_keywords',
+          'missing_social_presence', 'open_university', 'personal_details_present'];
+        return !negativeFields.includes(field);
+      }
+
+      function formatFieldName(field) {
+        return field
+          .replaceAll("_", " ")
+          .replace(/\b\w/g, l => l.toUpperCase())
+          .replace("Ats", "ATS")
+          .replace("Github", "GitHub")
+          .replace("Linkedin", "LinkedIn")
+          .replace("Ai", "AI");
       }
 
       function successIcon() {
         return `
-          <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" stroke-width="2"
+          <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
-              d="M5 13l4 4L19 7" />
+              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         `;
       }
 
       function errorIcon() {
         return `
-          <svg class="w-5 h-5 text-danger" fill="none" stroke="currentColor" stroke-width="2"
+          <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12" />
+              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         `;
       }
