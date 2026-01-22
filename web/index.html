@@ -7,19 +7,29 @@
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Lottie Animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    
+
     <style>
       @keyframes gradient-shift {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
       }
 
       @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
       }
 
       @keyframes scale-in {
@@ -103,22 +113,40 @@
   <body
     class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 min-h-screen flex items-center justify-center p-4 md:p-6 animate-gradient"
   >
-    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM2MzY2ZjEiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00ek0yMCA0OGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"></div>
-    
+    <div
+      class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM2MzY2ZjEiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00ek0yMCA0OGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"
+    ></div>
+
     <div
       class="relative max-w-6xl w-full bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700/50 p-6 md:p-12 animate-scale-in"
     >
       <!-- Header -->
       <div class="text-center mb-10">
-        <div class="inline-block mb-4 p-4 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-lg animate-float">
-          <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <div
+          class="inline-block mb-4 p-4 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-lg animate-float"
+        >
+          <svg
+            class="w-12 h-12 text-white"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
           </svg>
         </div>
-        <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">
+        <h1
+          class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3"
+        >
           ATS Resume Analyzer
         </h1>
-        <p class="text-slate-400 text-lg">Get instant feedback on your resume's ATS compatibility</p>
+        <p class="text-slate-400 text-lg">
+          Get instant feedback on your resume's ATS compatibility
+        </p>
       </div>
 
       <!-- Upload Zone -->
@@ -128,33 +156,56 @@
       >
         <div class="flex flex-col items-center gap-6">
           <div class="relative">
-            <div class="absolute inset-0 bg-indigo-600 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
-            <div class="relative p-6 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-full border border-indigo-500/30">
-              <svg class="w-16 h-16 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            <div
+              class="absolute inset-0 bg-indigo-600 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"
+            ></div>
+            <div
+              class="relative p-6 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-full border border-indigo-500/30"
+            >
+              <svg
+                class="w-16 h-16 text-indigo-400"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
               </svg>
             </div>
           </div>
-          
+
           <div>
             <p class="text-xl font-semibold text-slate-200 mb-2">
               Drop your PDF resume here
             </p>
             <p class="text-slate-400 text-sm">
-              or <span class="text-indigo-400 font-medium">click to browse</span>
+              or
+              <span class="text-indigo-400 font-medium">click to browse</span>
             </p>
           </div>
 
           <div class="flex items-center gap-6 text-xs text-slate-500">
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                <path
+                  fill-rule="evenodd"
+                  d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
               </svg>
               <span>Secure & Private</span>
             </div>
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clip-rule="evenodd"
+                />
               </svg>
               <span>Instant Analysis</span>
             </div>
@@ -216,14 +267,22 @@
       ["dragover", "dragenter"].forEach((event) => {
         dropZone.addEventListener(event, (e) => {
           e.preventDefault();
-          dropZone.classList.add("border-indigo-500", "bg-slate-800/50", "scale-105");
+          dropZone.classList.add(
+            "border-indigo-500",
+            "bg-slate-800/50",
+            "scale-105",
+          );
         });
       });
 
       ["dragleave", "drop"].forEach((event) => {
         dropZone.addEventListener(event, (e) => {
           e.preventDefault();
-          dropZone.classList.remove("border-indigo-500", "bg-slate-800/50", "scale-105");
+          dropZone.classList.remove(
+            "border-indigo-500",
+            "bg-slate-800/50",
+            "scale-105",
+          );
         });
       });
 
@@ -239,17 +298,20 @@
       });
 
       /* ---------- Core upload logic ---------- */
-
       async function uploadFile(file) {
         if (!file || file.type !== "application/pdf") {
+          hideDropZone();
           showError("Please upload a valid PDF file");
+          resultDiv.innerHTML += uploadAgainButton();
+          bindUploadAgain();
           return;
         }
 
+        hideDropZone();
+        showLoader();
+
         const formData = new FormData();
         formData.append("file", file);
-
-        showLoader();
 
         try {
           const res = await fetch("/api/v1/ats/resume_upload", {
@@ -258,15 +320,87 @@
           });
 
           if (!res.ok) {
-            const text = await res.text();
-            throw new Error(text);
+            throw new Error(await res.text());
           }
 
           const json = await res.json();
+
+          if (json?.data?.is_valid_resume === false) {
+            renderInvalidResumeFromData(json.data);
+            resultDiv.innerHTML += uploadAgainButton();
+            bindUploadAgain();
+            return;
+          }
+
           renderResult(json);
+          resultDiv.innerHTML += uploadAgainButton();
+          bindUploadAgain();
         } catch (err) {
           showError(err.message || "Analysis failed. Please try again.");
+          resultDiv.innerHTML += uploadAgainButton();
+          bindUploadAgain();
         }
+      }
+
+      function uploadAgainButton() {
+        return `
+   <div class="flex justify-center mt-6">
+  <button
+    id="upload_again"
+    class="
+      group relative inline-flex items-center gap-3
+      px-8 py-4 rounded-2xl
+      bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+      text-white font-semibold text-base
+
+      shadow-[6px_6px_14px_rgba(17,24,39,0.45),_-6px_-6px_14px_rgba(255,255,255,0.08)]
+      transition-all duration-300
+
+      hover:shadow-[2px_2px_8px_rgba(17,24,39,0.6),_-2px_-2px_8px_rgba(255,255,255,0.15)]
+      hover:translate-y-[-1px]
+
+      active:shadow-[inset_4px_4px_8px_rgba(17,24,39,0.55),_inset_-4px_-4px_8px_rgba(255,255,255,0.12)]
+      active:translate-y-[1px]
+
+      focus:outline-none focus:ring-2 focus:ring-purple-400/40
+    "
+  >
+    <!-- Icon -->
+    <svg
+      class="w-5 h-5 transition-transform duration-300 group-hover:rotate-180"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v6h6M20 20v-6h-6M5 19a9 9 0 0114-14" />
+    </svg>
+
+    <span class="tracking-wide">
+      Upload Again
+    </span>
+  </button>
+</div>
+
+  `;
+      }
+
+      function hideDropZone() {
+        dropZone.classList.add("hidden");
+      }
+
+      function showDropZone() {
+        dropZone.classList.remove("hidden");
+      }
+
+      function bindUploadAgain() {
+        const btn = document.getElementById("upload_again");
+        if (!btn) return;
+
+        btn.addEventListener("click", () => {
+          resultDiv.innerHTML = "";
+          showDropZone();
+        });
       }
 
       function showError(message) {
@@ -355,7 +489,12 @@
 
       function renderResult(res) {
         const { score, data } = res;
-        const scoreColor = score >= 80 ? 'from-green-400 to-emerald-500' : score >= 60 ? 'from-yellow-400 to-orange-500' : 'from-red-400 to-rose-500';
+        const scoreColor =
+          score >= 80
+            ? "from-green-400 to-emerald-500"
+            : score >= 60
+              ? "from-yellow-400 to-orange-500"
+              : "from-red-400 to-rose-500";
 
         let html = `
   <div class="text-center mb-12 animate-scale-in">
@@ -407,7 +546,7 @@
             const isPositive = shouldBePositive(field) ? value : !value;
 
             html += `
-      <div class="flex items-center gap-3 p-4 rounded-xl ${isPositive ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'} transition-all hover:scale-105">
+      <div class="flex items-center gap-3 p-4 rounded-xl ${isPositive ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"} transition-all hover:scale-105">
         ${isPositive ? successIcon() : errorIcon()}
         <span class="text-sm text-slate-200">
           ${formatFieldName(field)}
@@ -427,25 +566,40 @@
       }
 
       function getScoreMessage(score) {
-        if (score >= 90) return "Excellent! Your resume is highly ATS-compatible";
-        if (score >= 75) return "Great! Minor improvements will make it perfect";
+        if (score >= 90)
+          return "Excellent! Your resume is highly ATS-compatible";
+        if (score >= 75)
+          return "Great! Minor improvements will make it perfect";
         if (score >= 60) return "Good foundation, but needs optimization";
-        if (score >= 40) return "Significant improvements needed for ATS systems";
+        if (score >= 40)
+          return "Significant improvements needed for ATS systems";
         return "Major revisions required for ATS compatibility";
       }
 
       function shouldBePositive(field) {
-        const negativeFields = ['complex_sentences', 'repeated_action_verbs', 'passive_language', 
-          'grammar_issues', 'ai_language_detected', 'multiple_fonts', 'multi_column_layout',
-          'more_than_two_pages', 'large_file_size', 'experience_gap', 'missing_keywords',
-          'missing_social_presence', 'open_university', 'personal_details_present'];
+        const negativeFields = [
+          "complex_sentences",
+          "repeated_action_verbs",
+          "passive_language",
+          "grammar_issues",
+          "ai_language_detected",
+          "multiple_fonts",
+          "multi_column_layout",
+          "more_than_two_pages",
+          "large_file_size",
+          "experience_gap",
+          "missing_keywords",
+          "missing_social_presence",
+          "open_university",
+          "personal_details_present",
+        ];
         return !negativeFields.includes(field);
       }
 
       function formatFieldName(field) {
         return field
           .replaceAll("_", " ")
-          .replace(/\b\w/g, l => l.toUpperCase())
+          .replace(/\b\w/g, (l) => l.toUpperCase())
           .replace("Ats", "ATS")
           .replace("Github", "GitHub")
           .replace("Linkedin", "LinkedIn")
@@ -470,6 +624,48 @@
               d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         `;
+      }
+      function renderInvalidResumeFromData(data) {
+        resultDiv.innerHTML = `
+    <div class="flex flex-col items-center justify-center gap-6 py-10 animate-scale-in">
+
+      <div class="relative">
+        <div class="absolute inset-0 bg-rose-500 rounded-full blur-2xl opacity-20"></div>
+        <div class="relative p-6 bg-rose-500/10 rounded-full border border-rose-500/30">
+          <svg class="w-16 h-16 text-rose-400" fill="none" stroke="currentColor" stroke-width="1.5"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="text-center max-w-xl space-y-4">
+        <h3 class="text-2xl font-semibold text-slate-200">
+          Uploaded file is not a valid resume
+        </h3>
+
+        <p class="text-slate-400 text-sm leading-relaxed">
+          We couldn’t detect enough structured resume content to run an ATS analysis.
+          This usually means the document is missing essential sections or is not
+          a standard resume format.
+        </p>
+
+        <div class="mt-4 p-4 bg-slate-800/60 rounded-xl border border-slate-700 text-left">
+          <ul class="text-sm text-slate-400 space-y-2">
+            <li>• Add clear section headings (Experience, Skills, Education)</li>
+            <li>• Ensure your email and contact details are present</li>
+            <li>• Avoid uploading cover letters or scanned images</li>
+            <li>• Use a clean, text-based PDF resume</li>
+          </ul>
+        </div>
+
+        <p class="text-xs text-slate-500 mt-4">
+          Update your resume and upload again to get a full ATS compatibility score.
+        </p>
+      </div>
+    </div>
+  `;
       }
     </script>
   </body>

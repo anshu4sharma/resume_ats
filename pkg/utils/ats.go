@@ -1,10 +1,12 @@
 package utils
 
 import (
+	"fmt"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+
 	"github.com/anshu4sharma/resume_ats/internal/structs"
 )
 
@@ -364,7 +366,6 @@ func DetectNoExperience(text string) bool {
 	return !DetectExperience(text)
 }
 
-
 func DetectExperience(text string) bool {
 	keywords := []string{
 		"experience",
@@ -526,4 +527,90 @@ func DetectOpenUniversity(text string) bool {
 func DetectGitHubOrPortfolio(text string) bool {
 	return strings.Contains(text, "github.com") ||
 		strings.Contains(text, "portfolio")
+}
+
+func DetectEmailPresent(text string) bool {
+	return EmailRegex.MatchString(text)
+}
+
+func IsValidResume(text string) bool {
+	fmt.Println(!DetectEmailPresent(text), !DetectSectionHeaders(text), !DetectMinimumWordCount(text), "IsValidResume")
+	if !DetectEmailPresent(text) {
+		return false
+	}
+	if !DetectMinimumWordCount(text) {
+		return false
+	}
+	if !DetectSectionHeaders(text) {
+		return false
+	}
+
+	return true
+}
+
+func NormalizeText(text string) string {
+	replacements := []string{
+		"•", " ",
+		",", " ",
+		".", " ",
+		"—", " ",
+		"-", " ",
+		"+", " ",
+		"/", " ",
+		"(", " ",
+		")", " ",
+		"\n", " ",
+		"\t", " ",
+	}
+
+	r := strings.NewReplacer(replacements...)
+	normalized := r.Replace(text)
+
+	normalized = strings.Join(strings.Fields(normalized), " ")
+
+	return normalized
+}
+
+func DetectMinimumWordCount(text string) bool {
+	normalized := NormalizeText(text)
+	wc := len(strings.Fields(normalized))
+
+	if len(text) > 500 && wc < 30 {
+		return false
+	}
+	
+	return wc >= 80
+}
+
+func DetectSectionHeaders(text string) bool {
+	headers := []string{
+		"experience", "education", "skills", "projects",
+		"certifications", "summary", "profile", "objective",
+		"competencies", "achievements",
+	}
+
+	count := 0
+	for _, h := range headers {
+		if strings.Contains(text, h) {
+			count++
+		}
+	}
+	return count >= 2
+}
+
+func DetectDatesPresent(text string) bool {
+	yearRegex := regexp.MustCompile(`(19|20)\d{2}`)
+	return len(yearRegex.FindAllString(text, -1)) >= 2
+}
+
+func DetectEssayStyle(text string) bool {
+	lines := strings.Split(text, "\n")
+	longParas := 0
+
+	for _, l := range lines {
+		if len(strings.Fields(l)) > 40 {
+			longParas++
+		}
+	}
+	return longParas > len(lines)/3
 }

@@ -70,6 +70,7 @@ func (s *AtsService) AnalyzeResume(
 
 		MoreThanTwoPages: totalPage > 2,
 		LargeFileSize:    utils.IsLargeFile(fileSize),
+		IsValidResume:    utils.IsValidResume(resumeText),
 	}
 
 	score := utils.CalculateResumeScore(aiRes)
