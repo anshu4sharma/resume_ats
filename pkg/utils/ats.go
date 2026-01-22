@@ -369,12 +369,12 @@ func DetectExperience(text string) bool {
 	keywords := []string{
 		"experience",
 		"work experience",
-		"employment",
-		"intern",
-		"engineer",
-		"developer",
-		"manager",
-		"qa",
+		// "employment",
+		// "intern",
+		// "engineer",
+		// "developer",
+		// "manager",
+		// "qa",
 	}
 
 	for _, k := range keywords {
