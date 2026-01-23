@@ -22,7 +22,7 @@ type Logger struct {
 
 func NewLogger() *Logger {
 	return &Logger{
-		logger: log.New(os.Stdout, "", 0), 
+		logger: log.New(os.Stdout, "", 0),
 	}
 }
 
