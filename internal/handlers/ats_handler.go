@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"os"
@@ -100,8 +101,10 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 		return c.Status(500).SendString("failed to save file")
 	}
 
+	reader := bytes.NewReader(data)
+
 	result, err := h.service.AnalyzeResume(
-		src,
+		reader,
 		file.Filename,
 	)
 

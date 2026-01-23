@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"mime/multipart"
+	"io"
 	"strings"
 
 	"github.com/anshu4sharma/resume_ats/internal/structs"
@@ -11,7 +11,7 @@ import (
 
 type AtsService interface {
 	AnalyzeResume(
-		file multipart.File,
+		file io.Reader,
 		fileName string,
 	) (*structs.ResumeAnalysisResult, error)
 }
@@ -24,7 +24,7 @@ func NewAtsService(logger *utils.Logger) AtsService {
 }
 
 func (s *atsService) AnalyzeResume(
-	file multipart.File,
+	file io.Reader,
 	fileName string,
 ) (*structs.ResumeAnalysisResult, error) {
 
