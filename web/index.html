@@ -467,6 +467,182 @@
           </div>
         `;
       }
+      const FIELD_COPY = {
+        has_profile_summary: {
+          title: "Professional Summary Present",
+          positive:
+            "Your resume includes a clear professional summary, helping ATS systems quickly classify your profile.",
+          negative:
+            "Missing a professional summary. ATS systems may struggle to understand your role and seniority.",
+        },
+
+        has_experience: {
+          title: "Work Experience Section",
+          positive:
+            "Your work experience is clearly defined and readable by ATS systems.",
+          negative:
+            "No clear work experience section detected. This significantly reduces ATS ranking.",
+        },
+
+        has_skills: {
+          title: "Skills Section",
+          positive:
+            "Skills are explicitly listed, improving keyword matching for job descriptions.",
+          negative:
+            "No dedicated skills section found. This limits keyword matching in ATS scans.",
+        },
+
+        has_education: {
+          title: "Education Section",
+          positive:
+            "Education details are structured correctly for ATS parsing.",
+          negative:
+            "Education section missing or unclear. This may impact eligibility filters.",
+        },
+
+        has_email: {
+          title: "Email Address Detected",
+          positive: "A valid email address was detected and is ATS-readable.",
+          negative:
+            "No email address detected. Recruiters and ATS systems require this to proceed.",
+        },
+
+        has_phone: {
+          title: "Phone Number Detected",
+          positive: "Phone number is present and machine-readable.",
+          negative: "Phone number missing or unreadable by ATS systems.",
+        },
+
+        has_linkedin: {
+          title: "LinkedIn Profile Included",
+          positive:
+            "LinkedIn profile detected, increasing recruiter credibility signals.",
+          negative:
+            "No LinkedIn profile found. This reduces professional verification signals.",
+        },
+
+        has_github_or_portfolio: {
+          title: "Portfolio or GitHub Included",
+          positive:
+            "Portfolio or GitHub link strengthens technical credibility.",
+          negative:
+            "No portfolio or GitHub link detected. Consider adding proof of work.",
+        },
+
+        complex_sentences: {
+          title: "Sentence Complexity",
+          positive: "Language complexity is within ATS-friendly limits.",
+          negative:
+            "Overly complex sentences detected. ATS systems may misinterpret content.",
+        },
+
+        passive_language: {
+          title: "Passive Language Usage",
+          positive: "Action-oriented language detected.",
+          negative:
+            "Passive language detected. Use clear action verbs to improve ATS scoring.",
+        },
+
+        grammar_issues: {
+          title: "Grammar Quality",
+          positive: "No major grammar issues detected.",
+          negative:
+            "Grammar issues detected. This can negatively impact recruiter perception.",
+        },
+
+        ai_language_detected: {
+          title: "AI-Generated Language Risk",
+          positive: "Language appears natural and human-written.",
+          negative:
+            "AI-like phrasing detected. Some recruiters actively filter for this.",
+        },
+
+        multi_column_layout: {
+          title: "Layout Structure",
+          positive: "Single-column layout detected. ATS-friendly format.",
+          negative:
+            "Multi-column layout detected. ATS systems may misread content order.",
+        },
+
+        more_than_two_pages: {
+          title: "Resume Length",
+          positive: "Resume length is within recommended limits.",
+          negative:
+            "Resume exceeds two pages. ATS systems may deprioritize long resumes.",
+        },
+
+        missing_keywords: {
+          title: "Keyword Alignment",
+          positive: "Resume contains relevant role-specific keywords.",
+          negative:
+            "Important job-related keywords are missing. This lowers ATS match scores.",
+        },
+
+        experience_gap: {
+          title: "Employment Continuity",
+          positive: "No significant employment gaps detected.",
+          negative:
+            "Employment gaps detected. Consider adding explanations or projects.",
+        },
+        has_projects_or_certs: {
+          title: "Projects or Certifications",
+          positive:
+            "Projects or certifications detected, strengthening professional credibility.",
+          negative:
+            "No projects or certifications found. This weakens credibility signals.",
+        },
+
+        has_achievements: {
+          title: "Achievements Highlighted",
+          positive: "Achievements are clearly highlighted.",
+          negative:
+            "No measurable achievements detected. Consider adding impact-driven results.",
+        },
+
+        has_proof_of_work: {
+          title: "Proof of Work Links",
+          positive: "External proof-of-work links were detected.",
+          negative:
+            "No explicit proof-of-work links detected. Consider adding GitHub, demos, or deployed project links.",
+        },
+        has_coding_platforms: {
+          title: "Coding Platforms",
+          positive: "Coding platforms detected.",
+          negative:
+            "No coding platforms found. Consider adding GitHub, LeetCode, etc.",
+        },
+
+        has_coding_contests: {
+          title: "Coding Contests",
+          positive: "Competitive programming experience detected.",
+          negative: "No coding contest participation detected.",
+        },
+      };
+
+      function renderField(field, value) {
+        const meta = FIELD_COPY[field];
+        if (!meta) return null;
+
+        const isPositive = shouldBePositive(field) ? value : !value;
+
+        return `
+    <div class="flex items-start gap-3 p-4 rounded-xl
+      ${isPositive ? "bg-green-500/10 border-green-500/20" : "bg-red-500/10 border-red-500/20"}
+      border">
+      
+      ${isPositive ? successIcon() : errorIcon()}
+
+      <div>
+        <div class="text-sm font-semibold text-slate-200">
+          ${meta.title}
+        </div>
+        <div class="text-xs text-slate-400 leading-relaxed mt-1">
+          ${isPositive ? meta.positive : meta.negative}
+        </div>
+      </div>
+    </div>
+  `;
+      }
 
       /* ---------- Rendering ---------- */
       const UI_GROUPS = [
@@ -594,16 +770,8 @@
 
           for (const field of visibleFields) {
             const value = data[field];
-            const isPositive = shouldBePositive(field) ? value : !value;
-
-            html += `
-      <div class="flex items-center gap-3 p-4 rounded-xl ${isPositive ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"} transition-all hover:scale-105">
-        ${isPositive ? successIcon() : errorIcon()}
-        <span class="text-sm text-slate-200">
-          ${formatFieldName(field)}
-        </span>
-      </div>
-    `;
+            const card = renderField(field, value);
+            if (card) html += card;
           }
 
           html += `

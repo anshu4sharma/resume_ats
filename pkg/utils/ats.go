@@ -228,7 +228,7 @@ func DetectProofOfWork(text string) bool {
 		"vercel.app",
 		"netlify.app",
 	}
-
+	text = NormalizeText(text)
 	for _, s := range signals {
 		if strings.Contains(text, s) {
 			return true
