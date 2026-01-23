@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"net/mail"
 	"regexp"
 	"sort"
 	"strconv"
@@ -124,9 +125,9 @@ func CalculateResumeScore(r structs.ResumeStruct) int {
 	if r.PersonalDetailsPresent {
 		penalty += 3
 	}
-	if r.OpenUniversity {
-		penalty += 2
-	}
+	// if r.OpenUniversity {
+	// 	penalty += 2
+	// }
 
 	// --------------------
 	// Penalty Normalization
@@ -151,7 +152,7 @@ func CalculateResumeScore(r structs.ResumeStruct) int {
 }
 
 var (
-	EmailRegex = regexp.MustCompile(`[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`)
+	EmailRegex = regexp.MustCompile(`(?i)\b[a-z0-9._%+\-]+@[a-z0-9\-]+(\.[a-z0-9\-]+)*\.[a-z]{2,}\b`)
 	PhoneRegex = regexp.MustCompile(`(\+?\d{1,3})?[\s\-]?\(?\d{2,4}\)?[\s\-]?\d{3,4}[\s\-]?\d{4}`)
 )
 
@@ -530,7 +531,27 @@ func DetectGitHubOrPortfolio(text string) bool {
 }
 
 func DetectEmailPresent(text string) bool {
-	return EmailRegex.MatchString(text)
+	normalized := NormalizeForEmail(text)
+
+	emails := EmailRegex.FindAllString(normalized, -1)
+	if len(emails) == 0 {
+		return false
+	}
+
+	for _, e := range emails {
+		if _, err := mail.ParseAddress(e); err == nil {
+			return true
+		}
+	}
+	return false
+}
+
+func NormalizeForEmail(text string) string {
+	s := strings.ToLower(text)
+	s = regexp.MustCompile(`\s+`).ReplaceAllString(s, " ")
+	s = regexp.MustCompile(`\s*@\s*`).ReplaceAllString(s, "@")
+	s = regexp.MustCompile(`\s*\.\s*`).ReplaceAllString(s, ".")
+	return s
 }
 
 func IsValidResume(text string) bool {
@@ -578,7 +599,7 @@ func DetectMinimumWordCount(text string) bool {
 	if len(text) > 500 && wc < 30 {
 		return false
 	}
-	
+
 	return wc >= 80
 }
 

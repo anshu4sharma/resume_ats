@@ -61,7 +61,7 @@ func (s *AtsService) AnalyzeResume(
 		MultiColumnLayout: utils.DetectMultiColumnLayout(resumeText),
 
 		PersonalDetailsPresent: utils.DetectPersonalDetails(resumeText),
-		OpenUniversity:         utils.DetectOpenUniversity(resumeText),
+		// OpenUniversity:         utils.DetectOpenUniversity(resumeText),
 
 		HasEmail:             utils.EmailRegex.MatchString(resumeText),
 		HasPhone:             utils.PhoneRegex.MatchString(resumeText),

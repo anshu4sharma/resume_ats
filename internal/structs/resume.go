@@ -36,9 +36,9 @@ type ResumeStruct struct {
 	MoreThanTwoPages       bool `json:"more_than_two_pages"`
 	LargeFileSize          bool `json:"large_file_size"`
 	PersonalDetailsPresent bool `json:"personal_details_present"`
-	OpenUniversity         bool `json:"open_university"`
-	HasProofOfWork         bool `json:"has_proof_of_work"`
-	IsValidResume          bool `json:"is_valid_resume"`
+	// OpenUniversity         bool `json:"open_university"`
+	HasProofOfWork bool `json:"has_proof_of_work"`
+	IsValidResume  bool `json:"is_valid_resume"`
 }
 
 type ResumeAnalysisResult struct {
