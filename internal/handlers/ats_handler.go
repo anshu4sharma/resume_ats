@@ -3,13 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"os"
-	"time"
 
 	"github.com/anshu4sharma/resume_ats/internal/config"
 	"github.com/anshu4sharma/resume_ats/internal/services"
 	"github.com/anshu4sharma/resume_ats/internal/structs"
 	redis "github.com/anshu4sharma/resume_ats/pkg"
 	"github.com/anshu4sharma/resume_ats/pkg/utils"
+	"github.com/anshu4sharma/resume_ats/shared/constant"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -46,24 +46,23 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 			SendString("only PDF files are supported")
 	}
 
+	if file.Size > utils.MaxResumeSize {
+		return c.Status(fiber.StatusBadRequest).
+			SendString("file size exceeds 3 MB.")
+	}
+
 	uploadDir := "./uploads"
+
 	_ = os.MkdirAll(uploadDir, 0755)
 
 	path := uploadDir + "/" + file.Filename
-	if err := c.SaveFile(file, path); err != nil {
-		return c.Status(500).SendString("failed to save file")
-	}
 
-	if file.Size > utils.MaxResumeSizeBytes {
-		return fiber.ErrRequestEntityTooLarge
-	}
-
-	fileHash, err := utils.HashFile(path)
+	fileHash, err := utils.HashMultipartFile(file)
 
 	if err != nil {
-		return c.JSON(fiber.Map{
+		return c.Status(500).JSON(fiber.Map{
 			"status": "failed",
-			"error":  err.Error(),
+			"error":  "failed to hash file",
 		})
 	}
 
@@ -83,6 +82,10 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 		h.logger.Warnf("cache unmarshal failed, recomputing")
 	}
 
+	if err := c.SaveFile(file, path); err != nil {
+		return c.Status(500).SendString("failed to save file")
+	}
+
 	result, err := h.service.AnalyzeResume(
 		path,
 		file.Size,
@@ -90,7 +93,7 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 	)
 
 	if err != nil {
-		return c.JSON(fiber.Map{
+		return c.Status(500).JSON(fiber.Map{
 			"status": "failed",
 			"error":  err.Error(),
 		})
@@ -102,7 +105,7 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 			c.Context(),
 			fileHash,
 			string(bytes),
-			time.Hour,
+			constant.Max_Cache_Duration,
 		)
 	}
 
