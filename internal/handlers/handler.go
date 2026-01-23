@@ -6,11 +6,13 @@ import (
 )
 
 type Handlers struct {
-	AtsHandler *AtsHandler
+	AtsHandler   *AtsHandler
+	DeployHanler *DeployHandler
 }
 
 func NewHandlers(atsService *services.AtsService, logger *utils.Logger) *Handlers {
 	return &Handlers{
-		AtsHandler: NewAtsHandler(atsService, logger),
+		AtsHandler:   NewAtsHandler(atsService, logger),
+		DeployHanler: NewDeployHandler(logger),
 	}
 }

@@ -12,5 +12,5 @@ func SetupRoutes(app *fiber.App, h *handlers.Handlers) {
 	ats.Post("/resume_upload", h.AtsHandler.UploadResume)
 
 	deploy := apiV1.Group("/deploy")
-	deploy.Post("/webhook", h.Deploy)
+	deploy.Post("/webhook", h.DeployHanler.Deploy)
 }
