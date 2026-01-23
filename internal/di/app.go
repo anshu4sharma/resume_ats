@@ -37,7 +37,7 @@ func RegisterHooks(
 			router.SetupRoutes(app, handlers)
 
 			go func() {
-				if err := app.Listen(cfg.ServerPort); err != nil {
+				if err := app.Listen(cfg.SERVER_PORT); err != nil {
 					// Fiber returns an error on shutdown; ignore it
 				}
 			}()

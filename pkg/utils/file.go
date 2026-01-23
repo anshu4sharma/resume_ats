@@ -4,12 +4,11 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"io"
+	"math/rand"
 	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/google/uuid"
 )
 
 const (
@@ -17,8 +16,14 @@ const (
 	MaxResumeSize      = 3 * 1024 * 1024
 )
 
-func GenerateUUID() string {
-	return uuid.NewString()
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+func GenerateID(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
 }
 
 func SaveContentToFile(folder, filename, ext string, content []byte) (string, error) {
@@ -57,6 +62,11 @@ func HashFile(path string) (string, error) {
 	}
 
 	return hex.EncodeToString(hasher.Sum(nil)), nil
+}
+
+func HashBytes(data []byte) string {
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:])
 }
 
 func HashMultipartFile(fileHeader *multipart.FileHeader) (string, error) {

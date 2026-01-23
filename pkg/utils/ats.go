@@ -61,9 +61,9 @@ func CalculateResumeScore(r structs.ResumeStruct) int {
 	if r.HasLanguages {
 		score += 2
 	}
-	if r.GoodFormatting {
-		score += 3
-	}
+	// if r.GoodFormatting {
+	// 	score += 3
+	// }
 	if r.TopInstitute {
 		score += 2
 	}

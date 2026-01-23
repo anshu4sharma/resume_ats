@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"io"
 	"os"
 
 	"github.com/anshu4sharma/resume_ats/internal/config"
@@ -55,9 +56,22 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 
 	_ = os.MkdirAll(uploadDir, 0755)
 
-	path := uploadDir + "/" + file.Filename
+	path := uploadDir + "/" + utils.GenerateID(4) + "-" + file.Filename
 
-	fileHash, err := utils.HashMultipartFile(file)
+	src, err := file.Open()
+
+	if err != nil {
+		h.logger.Infof("error while opening file in memory")
+	}
+
+	defer src.Close()
+
+	data, err := io.ReadAll(src)
+	if err != nil {
+		return c.Status(500).SendString("failed to read file")
+	}
+
+	fileHash := utils.HashBytes(data)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -87,15 +101,14 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 	}
 
 	result, err := h.service.AnalyzeResume(
-		path,
-		file.Size,
+		src,
 		file.Filename,
 	)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"status": "failed",
-			"error":  err.Error(),
+			"error":  "Sorry we couldnt anaylyze ur resume",
 		})
 	}
 

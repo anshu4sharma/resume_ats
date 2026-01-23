@@ -1,7 +1,8 @@
 package services
 
 import (
-	"errors"
+	"fmt"
+	"mime/multipart"
 	"strings"
 
 	"github.com/anshu4sharma/resume_ats/internal/structs"
@@ -10,9 +11,8 @@ import (
 
 type AtsService interface {
 	AnalyzeResume(
-		filePath string,
-		fileSize int64,
-		filename string,
+		file multipart.File,
+		fileName string,
 	) (*structs.ResumeAnalysisResult, error)
 }
 type atsService struct {
@@ -24,19 +24,27 @@ func NewAtsService(logger *utils.Logger) AtsService {
 }
 
 func (s *atsService) AnalyzeResume(
-	filePath string,
-	fileSize int64,
-	filename string,
+	file multipart.File,
+	fileName string,
 ) (*structs.ResumeAnalysisResult, error) {
 
-	content, totalPage, err := utils.ExtractText(filePath)
-	if err != nil || !utils.IsReadableText(content) {
-		s.logger.Warnf("fallback to OCR for %s", filename)
-		content, totalPage, err = utils.ExtractTextOCR(filePath)
-		if err != nil {
-			return nil, errors.New("ocr_failed")
-		}
+	// read directly using go lib
+	// content, totalPage, err := utils.ExtractText(filePath)
+	// if err != nil || !utils.IsReadableText(content) {
+	// 	s.logger.Warnf("fallback to OCR for %s", filename)
+	// 	content, totalPage, err = utils.ExtractTextOCR(filePath)
+	// 	if err != nil {
+	// 		return nil, errors.New("ocr_failed")
+	// 	}
+	// }
+
+	extraction, err := utils.ExtractTextFromPdfBox(file, fileName)
+
+	if err != nil {
+		return nil, fmt.Errorf("extraction failed: %w", err)
 	}
+
+	content := extraction.Text
 
 	resumeText := strings.ToLower(content)
 
@@ -63,9 +71,9 @@ func (s *atsService) AnalyzeResume(
 		RepeatedActionVerbs: utils.DetectRepeatedActionVerbs(resumeText),
 		PassiveLanguage:     utils.DetectPassiveLanguage(resumeText),
 
-		GoodFormatting:    utils.DetectGoodFormatting(resumeText),
-		MultipleFonts:     utils.DetectMultipleFonts(resumeText),
-		MultiColumnLayout: utils.DetectMultiColumnLayout(resumeText),
+		// GoodFormatting:    utils.DetectGoodFormatting(resumeText),
+		MultipleFonts:     extraction.MultipleFonts,
+		MultiColumnLayout: extraction.MultiColumnLayout,
 
 		PersonalDetailsPresent: utils.DetectPersonalDetails(resumeText),
 		// OpenUniversity:         utils.DetectOpenUniversity(resumeText),
@@ -75,9 +83,9 @@ func (s *atsService) AnalyzeResume(
 		HasLinkedIn:          strings.Contains(resumeText, "linkedin"),
 		HasGitHubOrPortfolio: utils.DetectGitHubOrPortfolio(resumeText),
 
-		MoreThanTwoPages: totalPage > 2,
-		LargeFileSize:    utils.IsLargeFile(fileSize),
-		IsValidResume:    utils.IsValidResume(resumeText),
+		MoreThanTwoPages: extraction.MoreThanTwoPages,
+		// LargeFileSize:    utils.IsLargeFile(fileSize),
+		IsValidResume: utils.IsValidResume(resumeText),
 	}
 
 	score := utils.CalculateResumeScore(aiRes)

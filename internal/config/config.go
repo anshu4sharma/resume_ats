@@ -8,10 +8,11 @@ import (
 )
 
 type Config struct {
-	ServerPort     string
+	SERVER_PORT    string
 	OPENAI_API_KEY string
 	DEPLOY_SECRET  string
 	REDIS_URL      string
+	PDFBOX_URL     string
 }
 
 func Load() *Config {
@@ -21,10 +22,11 @@ func Load() *Config {
 	}
 
 	return &Config{
-		ServerPort:     getEnv("SERVER_PORT", ":8080"),
+		SERVER_PORT:    getEnv("SERVER_PORT", ":8080"),
 		OPENAI_API_KEY: getEnv("OPENAI_API_KEY", "sk-********"),
 		DEPLOY_SECRET:  getEnv("DEPLOY_SECRET", "secret"),
 		REDIS_URL:      getEnv("REDIS_URL", "localhost"),
+		PDFBOX_URL:     getEnv("PDFBOX_URL", "http://localhost:4000/extract"),
 	}
 }
 

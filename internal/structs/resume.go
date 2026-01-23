@@ -15,8 +15,8 @@ type ResumeStruct struct {
 	HasCodingPlatforms   bool `json:"has_coding_platforms"`
 	HasCodingContests    bool `json:"has_coding_contests"`
 	HasLanguages         bool `json:"has_languages"`
-	GoodFormatting       bool `json:"good_formatting"`
-	TopInstitute         bool `json:"top_institute"`
+	// GoodFormatting       bool `json:"good_formatting"`
+	TopInstitute bool `json:"top_institute"`
 
 	// Negative signals
 	MissingProfileSummary  bool `json:"missing_profile_summary"`
@@ -44,4 +44,12 @@ type ResumeStruct struct {
 type ResumeAnalysisResult struct {
 	Score int          `json:"score"`
 	Data  ResumeStruct `json:"data"`
+}
+
+type JavaExtractionResponse struct {
+	Text              string `json:"text"`
+	TotalPages        int    `json:"total_pages"`
+	MultiColumnLayout bool   `json:"multi_column_layout"`
+	MultipleFonts     bool   `json:"multiple_fonts"`
+	MoreThanTwoPages  bool   `json:"more_than_two_pages"`
 }
