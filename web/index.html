@@ -47,7 +47,10 @@
       property="twitter:image"
       content="https://resume.anshu.uk/og-image.png"
     />
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <!-- Theme / UI -->
     <meta name="theme-color" content="#6366f1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -354,6 +357,18 @@
         if (!file || file.type !== "application/pdf") {
           hideDropZone();
           showError("Please upload a valid PDF file");
+          resultDiv.innerHTML += uploadAgainButton();
+          bindUploadAgain();
+          return;
+        }
+        const MAX_PDF_SIZE_MB = 3;
+        const MAX_PDF_SIZE_BYTES = MAX_PDF_SIZE_MB * 1024 * 1024;
+
+        if (file.size > MAX_PDF_SIZE_BYTES) {
+          hideDropZone();
+          showError(
+            "File size exceeds 3 MB. Please upload a smaller PDF resume.",
+          );
           resultDiv.innerHTML += uploadAgainButton();
           bindUploadAgain();
           return;

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block internal APIs and non-SEO surfaces
+Disallow: /api/
+Disallow: /uploads/
+Disallow: /admin/
+Disallow: /internal/
+
+# Block deployment & webhook endpoints
+Disallow: /deploy/
+Disallow: /webhook/
