@@ -10,7 +10,6 @@ require (
 	github.com/openai/openai-go/v3 v3.16.0
 	github.com/redis/go-redis/v9 v9.17.2
 	go.uber.org/fx v1.24.0
-	go.uber.org/zap v1.27.1
 )
 
 require (
@@ -37,6 +36,7 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/dig v1.19.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.27.1 // indirect
 	golang.org/x/crypto v0.43.0 // indirect
 	golang.org/x/sys v0.37.0 // indirect
 	golang.org/x/text v0.30.0 // indirect
