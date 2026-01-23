@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	MaxResumeSizeBytes = 5 * 1024 * 1024
+	MaxResumeSizeBytes = 3 * 1024 * 1024
 )
 
 func SaveContentToFile(folder, filename, ext string, content []byte) (string, error) {
