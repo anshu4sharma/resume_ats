@@ -11,6 +11,7 @@ type Config struct {
 	ServerPort     string
 	OPENAI_API_KEY string
 	DEPLOY_SECRET  string
+	REDIS_URL      string
 }
 
 func Load() *Config {
@@ -23,6 +24,7 @@ func Load() *Config {
 		ServerPort:     getEnv("SERVER_PORT", ":8080"),
 		OPENAI_API_KEY: getEnv("OPENAI_API_KEY", "sk-********"),
 		DEPLOY_SECRET:  getEnv("DEPLOY_SECRET", "secret"),
+		REDIS_URL:      getEnv("REDIS_URL", "localhost"),
 	}
 }
 

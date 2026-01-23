@@ -8,15 +8,22 @@ import (
 	"github.com/anshu4sharma/resume_ats/pkg/utils"
 )
 
-type AtsService struct {
+type AtsService interface {
+	AnalyzeResume(
+		filePath string,
+		fileSize int64,
+		filename string,
+	) (*structs.ResumeAnalysisResult, error)
+}
+type atsService struct {
 	logger *utils.Logger
 }
 
-func NewAtsService(logger *utils.Logger) *AtsService {
-	return &AtsService{logger: logger}
+func NewAtsService(logger *utils.Logger) AtsService {
+	return &atsService{logger: logger}
 }
 
-func (s *AtsService) AnalyzeResume(
+func (s *atsService) AnalyzeResume(
 	filePath string,
 	fileSize int64,
 	filename string,

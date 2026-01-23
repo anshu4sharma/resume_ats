@@ -1,20 +1,37 @@
 package handlers
 
 import (
+	"encoding/json"
 	"os"
+	"time"
 
+	"github.com/anshu4sharma/resume_ats/internal/config"
 	"github.com/anshu4sharma/resume_ats/internal/services"
+	"github.com/anshu4sharma/resume_ats/internal/structs"
+	redis "github.com/anshu4sharma/resume_ats/pkg"
 	"github.com/anshu4sharma/resume_ats/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 type AtsHandler struct {
-	service *services.AtsService
+	service services.AtsService
 	logger  *utils.Logger
+	cfg     *config.Config
+	redis   *redis.RedisClient
 }
 
-func NewAtsHandler(service *services.AtsService, logger *utils.Logger) *AtsHandler {
-	return &AtsHandler{service: service, logger: logger}
+func NewAtsHandler(
+	service services.AtsService,
+	logger *utils.Logger,
+	cfg *config.Config,
+	redis *redis.RedisClient,
+) *AtsHandler {
+	return &AtsHandler{
+		service: service,
+		logger:  logger,
+		cfg:     cfg,
+		redis:   redis,
+	}
 }
 
 func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
@@ -41,22 +58,52 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 		return fiber.ErrRequestEntityTooLarge
 	}
 
-	h.logger.Debugf("Skipping resume cleaning")
+	fileHash, err := utils.HashFile(path)
 
-	// defer func() {
-	// 	h.logger.Debugf("Cleaning up resume pdf.")
-	// 	if err := os.Remove(path); err != nil {
-	// 		h.logger.Warnf("failed to cleanup temp file %s: %v", path, err)
-	// 	}
-	// }()
+	if err != nil {
+		return c.JSON(fiber.Map{
+			"status": "failed",
+			"error":  err.Error(),
+		})
+	}
+
+	cached, err := h.redis.GetValue(c.Context(), fileHash)
+	if err == nil && cached != "" {
+		var cachedResult structs.ResumeAnalysisResult
+		if err := json.Unmarshal([]byte(cached), &cachedResult); err == nil {
+			h.logger.Infof("cache hit for %s", fileHash)
+
+			return c.JSON(fiber.Map{
+				"status": "success",
+				"score":  cachedResult.Score,
+				"data":   cachedResult.Data,
+			})
+		}
+
+		h.logger.Warnf("cache unmarshal failed, recomputing")
+	}
 
 	result, err := h.service.AnalyzeResume(
 		path,
 		file.Size,
 		file.Filename,
 	)
+
 	if err != nil {
-		return c.Status(400).SendString(err.Error())
+		return c.JSON(fiber.Map{
+			"status": "failed",
+			"error":  err.Error(),
+		})
+	}
+
+	bytes, err := json.Marshal(result)
+	if err == nil {
+		_ = h.redis.SetValue(
+			c.Context(),
+			fileHash,
+			string(bytes),
+			time.Hour,
+		)
 	}
 
 	return c.JSON(fiber.Map{

@@ -1,68 +1,23 @@
 package main
 
 import (
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-
-	"github.com/anshu4sharma/resume_ats/internal/bootstrap"
-	"github.com/anshu4sharma/resume_ats/internal/config"
-	"github.com/anshu4sharma/resume_ats/internal/router"
-	"github.com/anshu4sharma/resume_ats/pkg/utils"
-	"github.com/gofiber/fiber/v2"
-	flogger "github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/anshu4sharma/resume_ats/internal/di"
+	"go.uber.org/fx"
 )
 
 func main() {
-	cfg := config.Load()
-
-	logger := utils.NewLogger()
-
-	app := fiber.New(fiber.Config{
-		AppName:   "Resume ATS v1.0",
-		BodyLimit: utils.MaxResumeSizeBytes,
-		Prefork:   false,
-	})
-
-	app.Use(func(c *fiber.Ctx) error {
-		err := c.Next()
-		if err != nil {
-			if e, ok := err.(*fiber.Error); ok && e.Code == fiber.StatusRequestEntityTooLarge {
-				return c.Status(fiber.StatusRequestEntityTooLarge).JSON(fiber.Map{
-					"error":  "Resume file too large",
-					"max_mb": utils.MaxResumeSizeBytes / (1024 * 1024),
-				})
-			}
-			return err
-		}
-		return nil
-	})
-
-	app.Use(recover.New())
-	app.Use(flogger.New())
-	app.Static("/", "./web")
-
-	handlers, err := bootstrap.InitializeApp(logger)
-
-	if err != nil {
-		logger.Errorf("Failed to initialize app: %v", err)
-		os.Exit(1)
-	}
-
-	router.SetupRoutes(app, handlers)
-
-	shutdown := make(chan os.Signal, 1)
-	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
-
-	go func() {
-		<-shutdown
-		logger.Infof("Shutting down server...")
-		if err := app.Shutdown(); err != nil {
-			logger.Errorf("Error shutting down server: %v", err)
-		}
-	}()
-
-	log.Fatal(app.Listen(cfg.ServerPort))
+	fx.New(
+		fx.Provide(
+			di.ConfigProvider,
+			di.LoggerProvider,
+			di.RedisProvider,
+			di.AtsServiceProvider,
+			di.DeployServiceProvider,
+			di.HandlersProvider,
+			di.FiberApp,
+		),
+		fx.Invoke(
+			di.RegisterHooks,
+		),
+	).Run()
 }
