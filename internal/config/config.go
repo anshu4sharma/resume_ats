@@ -10,6 +10,7 @@ import (
 type Config struct {
 	ServerPort     string
 	OPENAI_API_KEY string
+	DEPLOY_SECRET  string
 }
 
 func Load() *Config {
@@ -21,6 +22,7 @@ func Load() *Config {
 	return &Config{
 		ServerPort:     getEnv("SERVER_PORT", ":8080"),
 		OPENAI_API_KEY: getEnv("OPENAI_API_KEY", "sk-********"),
+		DEPLOY_SECRET:  getEnv("DEPLOY_SECRET", "secret"),
 	}
 }
 
