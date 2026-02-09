@@ -4,6 +4,6 @@ import "time"
 
 const (
 	RetryLimit         = 3
-	Max_Cache_Duration = time.Minute * 30
+	Max_Cache_Duration = time.Hour * 24
 	DefaultTimeout     = 10
 )

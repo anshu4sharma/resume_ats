@@ -74,13 +74,6 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 
 	fileHash := utils.HashBytes(data)
 
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"status": "failed",
-			"error":  "failed to hash file",
-		})
-	}
-
 	cached, err := h.redis.GetValue(c.Context(), fileHash)
 	if err == nil && cached != "" {
 		var cachedResult structs.ResumeAnalysisResult
