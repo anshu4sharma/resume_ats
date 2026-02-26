@@ -12,9 +12,11 @@ build/
 dist/
 out/
 uploads/
+tmp/
 coverage/
 *.coverprofile
 *.out
+myappbin
 
 # Go workspace and cache
 go.work

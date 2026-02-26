@@ -1,21 +1,25 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-cd /home/ubuntu/resume_ats
+APP_DIR="/home/ubuntu/resume_ats"
+BRANCH="main"
 
-echo "Pulling latest code..."
-git pull origin main
+echo "Navigating to application directory..."
+cd "$APP_DIR"
 
-echo "🧹 Formatting Go code..."
-make fmt
+echo "Fetching latest code..."
+git fetch origin
 
-echo "📦 Tidying modules..."
-make tidy
+echo "Resetting working tree to origin/$BRANCH..."
+git reset --hard "origin/$BRANCH"
 
-echo "📦 Making production build...."
+echo "Cleaning untracked files..."
+git clean -fd
+
+echo "Building production binary..."
 make build
 
 echo "Restarting service..."
 pm2 restart resume-ats
 
-echo "Deploy complete"
+echo "Deployment completed successfully."
