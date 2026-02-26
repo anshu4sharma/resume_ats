@@ -53,7 +53,7 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 			SendString("file size exceeds 3 MB.")
 	}
 
-	uploadDir := "./uploads"
+	uploadDir := "./tmp"
 
 	_ = os.MkdirAll(uploadDir, 0755)
 
@@ -72,7 +72,7 @@ func (h *AtsHandler) UploadResume(c *fiber.Ctx) error {
 		return c.Status(500).SendString("failed to read file")
 	}
 
-	fileHash := utils.HashBytes(data)
+	fileHash := utils.HashBytesSha256(data)
 
 	cached, err := h.redis.GetValue(c.Context(), fileHash)
 	if err == nil && cached != "" {

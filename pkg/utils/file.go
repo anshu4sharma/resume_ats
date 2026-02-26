@@ -9,8 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/zeebo/blake3"
 )
 
 const (
@@ -72,10 +70,6 @@ func HashBytesSha256(data []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 
-func HashBytes(data []byte) string {
-	sum := blake3.Sum256(data)
-	return hex.EncodeToString(sum[:])
-}
 func HashMultipartFile(fileHeader *multipart.FileHeader) (string, error) {
 	file, err := fileHeader.Open()
 	if err != nil {
