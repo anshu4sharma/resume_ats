@@ -15,13 +15,21 @@ import (
 
 func FiberApp() *fiber.App {
 	app := fiber.New(fiber.Config{
-		AppName:   "Resume ATS v1.0",
-		BodyLimit: utils.MaxResumeSizeBytes,
-		Prefork:   false,
+		AppName:                 "Resume ATS v1.0",
+		BodyLimit:               utils.MaxResumeSizeBytes,
+		Prefork:                 false,
+		EnableTrustedProxyCheck: true,
+		TrustedProxies: []string{
+			"127.0.0.1",
+		},
+		ProxyHeader: "CF-Connecting-IP",
 	})
 
 	app.Use(recover.New())
-	app.Use(flogger.New())
+	app.Use(flogger.New(flogger.Config{
+		Format: "${time} | ${status} | ${latency} | ${ip} | ${method} | ${path}\n",
+	}))
+
 	app.Static("/", "./web")
 
 	return app
