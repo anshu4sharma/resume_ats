@@ -14,14 +14,20 @@ import (
 )
 
 func FiberApp() *fiber.App {
+	cfIPs, err := utils.FetchCloudflareIPs()
+	
+	if err != nil {
+		panic(err)
+	};
+	
+	trusted := append([]string{"127.0.0.1"}, cfIPs...)
+
 	app := fiber.New(fiber.Config{
 		AppName:                 "Resume ATS v1.0",
 		BodyLimit:               utils.MaxResumeSizeBytes,
 		Prefork:                 false,
 		EnableTrustedProxyCheck: true,
-		TrustedProxies: []string{
-			"127.0.0.1",
-		},
+		TrustedProxies: trusted,
 		ProxyHeader: "CF-Connecting-IP",
 	})
 
