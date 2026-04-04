@@ -22,7 +22,11 @@ FROM gcr.io/distroless/static-debian12:nonroot
 
 WORKDIR /app
 
+# copy binary
 COPY --from=builder /src/app .
+
+# copy UI assets
+COPY --from=builder /src/web ./web
 
 EXPOSE 8080
 
