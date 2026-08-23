@@ -1,0 +1,6 @@
+.github
+.env
+docker-compose.yml
+README.md
+*.sh
+.air.toml
